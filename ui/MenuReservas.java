@@ -306,7 +306,6 @@ public class MenuReservas {
         }
     }
 
-    // Igual que los efectos: se muestran los otros cargos y se repite hasta escribir 0
     private void agregarOtros(Scanner teclado, Cita cita) {
         System.out.println("\n--- OTROS ---");
         catalogo.mostrarLista(catalogo.getOtros());
