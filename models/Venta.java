@@ -1,5 +1,7 @@
 package models;
 
+import utils.Consola;
+
 import interfaces.Cobrable;
 
 public class Venta implements Cobrable {
@@ -45,8 +47,8 @@ public class Venta implements Cobrable {
     public void mostrarResumen() {
         System.out.println("Venta #" + codigo + " | " + fecha
                 + " | " + reserva.getCita().getCliente().getNombreCompleto()
-                + " | Total: S/ " + getTotal()
-                + " | Saldo cobrado: S/ " + saldoCobrado
+                + " | Total: " + Consola.dinero(getTotal())
+                + " | Saldo cobrado: " + Consola.dinero(saldoCobrado)
                 + " | " + metodoPago);
     }
 }

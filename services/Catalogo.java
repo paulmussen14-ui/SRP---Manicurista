@@ -1,5 +1,7 @@
 package services;
 
+import utils.Consola;
+
 import java.util.ArrayList;
 
 import models.Efecto;
@@ -82,7 +84,7 @@ public class Catalogo {
             return;
         }
         for (int i = 0; i < lista.size(); i++) {
-            System.out.println("  [" + (i + 1) + "] " + lista.get(i).getNombre() + " - S/ " + lista.get(i).getPrecio());
+            System.out.println("  [" + (i + 1) + "] " + lista.get(i).getNombre() + " - " + Consola.dinero(lista.get(i).getPrecio()));
         }
     }
 

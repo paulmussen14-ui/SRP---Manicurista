@@ -1,5 +1,7 @@
 package models;
 
+import utils.Consola;
+
 import interfaces.Cobrable;
 import interfaces.Descontable;
 
@@ -12,6 +14,7 @@ public class Reserva implements Cobrable {
     private int codigo;
     private Cita cita;
     private double adelanto;
+    private String metodoAdelanto = "";
     private String estado;
 
 
@@ -35,6 +38,16 @@ public class Reserva implements Cobrable {
 
     public double getAdelanto() {
         return adelanto;
+    }
+
+    public String getMetodoAdelanto() {
+        return metodoAdelanto;
+    }
+
+    public void setMetodoAdelanto(String metodoAdelanto) {
+        if (metodoAdelanto != null) {
+            this.metodoAdelanto = metodoAdelanto;
+        }
     }
 
     public String getEstado() {
@@ -99,11 +112,12 @@ public class Reserva implements Cobrable {
         System.out.println("--- COMPROBANTE DE RESERVA ---");
         System.out.println("Codigo: " + codigo);
         cita.mostrarInformacion();
-        System.out.println("Subtotal: S/ " + cita.calcularPrecio());
-        System.out.println("Descuento: S/ " + calcularDescuento());
-        System.out.println("Total: S/ " + calcularPrecio());
-        System.out.println("Adelanto: S/ " + adelanto);
-        System.out.println("Saldo pendiente: S/ " + calcularSaldo());
+        System.out.println("Subtotal: " + Consola.dinero(cita.calcularPrecio()));
+        System.out.println("Descuento: " + Consola.dinero(calcularDescuento()));
+        System.out.println("Total: " + Consola.dinero(calcularPrecio()));
+        String via = metodoAdelanto.isEmpty() ? "" : " (" + metodoAdelanto + ")";
+        System.out.println("Adelanto: " + Consola.dinero(adelanto) + via);
+        System.out.println("Saldo pendiente: " + Consola.dinero(calcularSaldo()));
         System.out.println("Estado: " + estado);
     }
 

@@ -1,5 +1,7 @@
 package ui;
 
+import utils.Consola;
+
 import java.util.Scanner;
 
 import models.Boleta;
@@ -55,7 +57,7 @@ public class MenuVentas {
                     break;
                 case "5":
                     System.out.println(LINEA);
-                    System.out.println("Total vendido: S/ " + ventas.totalVendido());
+                    System.out.println("Total vendido: " + Consola.dinero(ventas.totalVendido()));
                     System.out.println(LINEA);
                     break;
                 case "0":
@@ -63,26 +65,6 @@ public class MenuVentas {
                 default:
                     System.out.println("Opcion no valida.");
             }
-        }
-    }
-
-    private String pedirMetodoPago(Scanner teclado) {
-        System.out.println("  [1] Efectivo");
-        System.out.println("  [2] Yape");
-        System.out.println("  [3] Plin");
-        System.out.println("  [4] Tarjeta");
-        System.out.print("Metodo de pago: ");
-        switch (teclado.nextLine().trim()) {
-            case "1":
-                return "Efectivo";
-            case "2":
-                return "Yape";
-            case "3":
-                return "Plin";
-            case "4":
-                return "Tarjeta";
-            default:
-                return null;
         }
     }
 
@@ -103,6 +85,12 @@ public class MenuVentas {
             System.out.println("La reserva no existe.");
             return;
         }
+        cobrar(teclado, r);
+    }
+
+    // Cobra el saldo de una reserva atendida y emite la boleta.
+    // Tambien se usa al terminar de atender una reserva.
+    public void cobrar(Scanner teclado, Reserva r) {
         if (ventas.reservaYaVendida(r)) {
             System.out.println("Esa reserva ya fue cobrada.");
             return;
@@ -113,12 +101,12 @@ public class MenuVentas {
         }
 
         System.out.println("Clienta: " + r.getCita().getCliente().getNombreCompleto());
-        System.out.println("Saldo a cobrar: S/ " + r.calcularSaldo());
+        System.out.println("Saldo a cobrar: " + Consola.dinero(r.calcularSaldo()));
 
-        String metodo = pedirMetodoPago(teclado);
-        if (metodo == null) {
-            System.out.println("Metodo no valido. No se registro la venta.");
-            return;
+        String metodo = Consola.pedirMetodoPago(teclado);
+        while (metodo == null) {
+            System.out.println("Opcion no valida. Elige un numero de la lista.");
+            metodo = Consola.pedirMetodoPago(teclado);
         }
 
         Venta venta = ventas.registrarVenta(r, metodo);

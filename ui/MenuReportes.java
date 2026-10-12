@@ -1,5 +1,7 @@
 package ui;
 
+import utils.Consola;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -107,7 +109,7 @@ public class MenuReportes {
             System.out.println("No hay ventas.");
         }
         for (int i = 0; i < fechas.size(); i++) {
-            System.out.println(fechas.get(i) + " -> S/ " + totales.get(i));
+            System.out.println(fechas.get(i) + " -> " + Consola.dinero(totales.get(i)));
         }
         System.out.println(LINEA);
     }
@@ -115,12 +117,17 @@ public class MenuReportes {
     private void ingresosPorMetodo() {
         System.out.println(LINEA);
         System.out.println("-------INGRESOS POR METODO DE PAGO-------\n");
-        String[] metodos = { "Efectivo", "Yape", "Plin", "Tarjeta" };
+        String[] metodos = Consola.METODOS_PAGO;
         double[] sumas = new double[metodos.length];
         int[] cantidades = new int[metodos.length];
 
+        // Cada venta se compone del adelanto (al reservar) y del saldo (al cobrar)
         for (Venta v : ventas.getVentas()) {
             for (int i = 0; i < metodos.length; i++) {
+                if (metodos[i].equals(v.getReserva().getMetodoAdelanto())) {
+                    sumas[i] += v.getReserva().getAdelanto();
+                    cantidades[i]++;
+                }
                 if (metodos[i].equals(v.getMetodoPago())) {
                     sumas[i] += v.calcularPrecio();
                     cantidades[i]++;
@@ -128,9 +135,12 @@ public class MenuReportes {
             }
         }
 
+        double total = 0;
         for (int i = 0; i < metodos.length; i++) {
-            System.out.println(metodos[i] + " -> S/ " + sumas[i] + " (" + cantidades[i] + " cobro(s))");
+            System.out.println(metodos[i] + " -> " + Consola.dinero(sumas[i]) + " (" + cantidades[i] + " cobro(s))");
+            total += sumas[i];
         }
+        System.out.println("TOTAL -> " + Consola.dinero(total) + " (adelantos + saldos de ventas cobradas)");
         System.out.println(LINEA);
     }
 

@@ -1,5 +1,7 @@
 package models;
 
+import utils.Consola;
+
 import java.util.ArrayList;
 
 import interfaces.Cobrable;
@@ -70,9 +72,9 @@ public class Cita implements Cobrable {
     public void mostrarInformacion() {
         System.out.println("Clienta: " + cliente.getNombreCompleto());
         System.out.println("Manicurista: " + manicurista.getNombreCompleto());
-        System.out.println("Servicio: " + principal.getNombre() + " - S/ " + principal.calcularPrecio());
+        System.out.println("Servicio: " + principal.getNombre() + " - " + Consola.dinero(principal.calcularPrecio()));
         for (Sistemas e : extras) {
-            System.out.println("  + " + e.getNombre() + " (" + e.getTipo() + ") - S/ " + e.calcularPrecio());
+            System.out.println("  + " + e.getNombre() + " (" + e.getTipo() + ") - " + Consola.dinero(e.calcularPrecio()));
         }
         System.out.println("Fecha: " + fecha);
         System.out.println("Hora: " + hora);

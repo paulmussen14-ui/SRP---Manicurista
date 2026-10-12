@@ -9,6 +9,7 @@ import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 
 import models.Cita;
+import models.Manicurista;
 import models.Reserva;
 
 public class ReservaServicio {
@@ -28,15 +29,8 @@ public class ReservaServicio {
             return null;
         }
 
-        String usuario = cita.getManicurista().getNombreUsuario();
-        for (Reserva r : reservas) {
-            Cita otra = r.getCita();
-            if (r.estaActiva()
-                    && otra.getFecha().equals(cita.getFecha())
-                    && otra.getHora().equals(cita.getHora())
-                    && otra.getManicurista().getNombreUsuario().equals(usuario)) {
-                return null;
-            }
+        if (!manicuristaLibre(cita.getManicurista(), cita.getFecha(), cita.getHora())) {
+            return null;
         }
 
         Reserva nueva = new Reserva(siguienteCodigo, cita);
@@ -44,6 +38,21 @@ public class ReservaServicio {
         reservas.add(nueva);
         siguienteCodigo++;
         return nueva;
+    }
+
+    // La manicurista no debe tener otra reserva activa a la misma fecha y hora
+    public boolean manicuristaLibre(Manicurista manicurista, String fecha, String hora) {
+        String usuario = manicurista.getNombreUsuario();
+        for (Reserva r : reservas) {
+            Cita otra = r.getCita();
+            if (r.estaActiva()
+                    && otra.getFecha().equals(fecha)
+                    && otra.getHora().equals(hora)
+                    && otra.getManicurista().getNombreUsuario().equals(usuario)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Formato dd/MM/aaaa y que no sea un dia pasado

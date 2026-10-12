@@ -7,7 +7,9 @@ import services.ClienteServicio;
 import services.UsuarioServicio;
 import services.ReservaServicio;
 import services.Catalogo;
+import services.DatosDemo;
 import services.VentaServicio;
+import utils.Consola;
 
 import ui.MenuVentas;
 import ui.MenuLogin;
@@ -27,12 +29,17 @@ public class Main {
         AuthServicio auth = new AuthServicio(usuarios, null);
         ClienteServicio clientes = new ClienteServicio();
 
+        if (Consola.confirmar(teclado, "Cargar datos de demostracion")) {
+            DatosDemo.cargar(usuarios, clientes, reservas, catalogo);
+            System.out.println("Datos cargados. Administrador: camile / 1234 | Manicuristas: lucia, valeria / 1234");
+        }
+
         MenuLogin menuLogin = new MenuLogin(auth, usuarios);
         MenuClientes menuClientes = new MenuClientes(clientes);
         VentaServicio ventas = new VentaServicio();
         MenuVentas menuVentas = new MenuVentas(ventas, reservas);
         MenuReportes menuReportes = new MenuReportes(ventas, reservas);
-        MenuReservas menuReservas = new MenuReservas(reservas, clientes, catalogo, usuarios);
+        MenuReservas menuReservas = new MenuReservas(reservas, clientes, catalogo, usuarios, menuVentas);
         MenuCatalogo menuCatalogo = new MenuCatalogo(catalogo);
         MenuPrincipal menuPrincipal = new MenuPrincipal(auth, usuarios, menuClientes, menuReservas,
                 menuVentas, menuReportes, menuCatalogo);

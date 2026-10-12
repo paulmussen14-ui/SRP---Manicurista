@@ -1,5 +1,7 @@
 package services;
 
+import utils.Consola;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -98,7 +100,7 @@ public class VentaServicio {
         if (cantidad == 0) {
             System.out.println("No hay ventas en esa fecha.");
         } else {
-            System.out.println("Ventas del dia: " + cantidad + " | Total: S/ " + suma);
+            System.out.println("Ventas del dia: " + cantidad + " | Total: " + Consola.dinero(suma));
         }
     }
 }

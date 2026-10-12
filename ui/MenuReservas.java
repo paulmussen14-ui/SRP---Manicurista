@@ -1,5 +1,7 @@
 package ui;
 
+import utils.Consola;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,13 +22,15 @@ public class MenuReservas {
     private ClienteServicio clientes;
     private Catalogo catalogo;
     private UsuarioServicio usuarios;
+    private MenuVentas menuVentas;
 
     public MenuReservas(ReservaServicio reservas, ClienteServicio clientes, Catalogo catalogo,
-            UsuarioServicio usuarios) {
+            UsuarioServicio usuarios, MenuVentas menuVentas) {
         this.reservas = reservas;
         this.clientes = clientes;
         this.catalogo = catalogo;
         this.usuarios = usuarios;
+        this.menuVentas = menuVentas;
     }
 
     public void mostrar(Scanner teclado) {
@@ -110,9 +114,13 @@ public class MenuReservas {
     // Busca la clienta por telefono o por nombre; si hay varias, pide elegir una
     private Cliente elegirCliente(Scanner teclado) {
         System.out.print("Telefono o nombre de la clienta: ");
-        ArrayList<Cliente> encontrados = clientes.buscarClientes(teclado.nextLine());
+        String texto = teclado.nextLine().trim();
+        ArrayList<Cliente> encontrados = clientes.buscarClientes(texto);
         if (encontrados.isEmpty()) {
-            System.out.println("No se encontro ninguna clienta. Registrala primero.");
+            System.out.println("No se encontro ninguna clienta con \"" + texto + "\".");
+            if (Consola.confirmar(teclado, "Registrarla ahora?")) {
+                return registrarClienta(teclado);
+            }
             return null;
         }
         if (encontrados.size() == 1) {
@@ -137,6 +145,30 @@ public class MenuReservas {
         }
         System.out.println("Numero no valido.");
         return null;
+    }
+
+    // Registro rapido de una clienta nueva sin salir de la reserva
+    private Cliente registrarClienta(Scanner teclado) {
+        System.out.println("--- REGISTRO RAPIDO DE CLIENTA ---");
+        System.out.print("Nombre: ");
+        String nombre = teclado.nextLine().trim();
+        System.out.print("Apellido: ");
+        String apellido = teclado.nextLine().trim();
+        System.out.print("Telefono: ");
+        String telefono = teclado.nextLine().trim();
+
+        if (nombre.isEmpty() || apellido.isEmpty() || telefono.isEmpty()) {
+            System.out.println("Nombre, apellido y telefono son obligatorios.");
+            return null;
+        }
+
+        Cliente nueva = new Cliente(nombre, apellido, telefono, "Regular");
+        if (!clientes.agregarCliente(nueva)) {
+            System.out.println("Ya existe una clienta con ese telefono.");
+            return null;
+        }
+        System.out.println("Clienta registrada: " + nueva.getNombreCompleto());
+        return nueva;
     }
 
     private void nuevaReserva(Scanner teclado) {
@@ -183,13 +215,27 @@ public class MenuReservas {
             }
         }
 
-        Reserva reserva = reservas.crearReserva(new Cita(cliente, servicio, manicurista, fecha, hora));
-        if (reserva == null) {
-            System.out.println("No se pudo crear: esa manicurista ya tiene una reserva a esa fecha y hora.");
+        if (!reservas.manicuristaLibre(manicurista, fecha, hora)) {
+            System.out.println("Esa manicurista ya tiene una reserva a esa fecha y hora. Intenta con otra hora.");
             return;
         }
 
-        System.out.println("Reserva confirmada. Adelanto cobrado: S/ " + reserva.getAdelanto());
+        Cita cita = new Cita(cliente, servicio, manicurista, fecha, hora);
+        System.out.println("Adelanto a cobrar (50%): " + Consola.dinero(new Reserva(cita).getAdelantoMinimo()));
+        String metodo = Consola.pedirMetodoPago(teclado);
+        while (metodo == null) {
+            System.out.println("Opcion no valida. Elige un numero de la lista.");
+            metodo = Consola.pedirMetodoPago(teclado);
+        }
+
+        Reserva reserva = reservas.crearReserva(cita);
+        if (reserva == null) {
+            System.out.println("No se pudo crear la reserva.");
+            return;
+        }
+        reserva.setMetodoAdelanto(metodo);
+
+        System.out.println("Reserva confirmada. Adelanto cobrado: " + Consola.dinero(reserva.getAdelanto()));
         reserva.mostrarComprobante();
         System.out.println(LINEA);
     }
@@ -231,8 +277,14 @@ public class MenuReservas {
 
         System.out.println("\n--- RESUMEN FINAL ---");
         r.mostrarComprobante();
-        System.out.println("Saldo a cobrar: S/ " + r.calcularSaldo());
+        System.out.println("Saldo a cobrar: " + Consola.dinero(r.calcularSaldo()));
         System.out.println(LINEA);
+
+        if (Consola.confirmar(teclado, "Cobrar ahora")) {
+            menuVentas.cobrar(teclado, r);
+        } else {
+            System.out.println("Queda pendiente de cobro en el menu Ventas.");
+        }
     }
 
     // Muestra la lista y repite hasta escribir 0
