@@ -23,7 +23,7 @@ public class UsuarioServicio {
     }
 
     public boolean agregarUsuario(Usuario nuevo) {
-        if (buscarUsuario(nuevo.getNombreUsuario()) != null) {
+        if (nuevo == null || buscarUsuario(nuevo.getNombreUsuario()) != null) {
             return false;
         }
         usuarios.add(nuevo);
@@ -72,6 +72,7 @@ public class UsuarioServicio {
     public void mostrarUsuarios() {
         if (usuarios.isEmpty()) {
             System.out.println("No hay usuarios registrados.");
+            return;
         }
 
         for (Usuario u : usuarios) {

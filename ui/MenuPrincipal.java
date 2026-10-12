@@ -127,7 +127,11 @@ public class MenuPrincipal {
             return;
         }
 
-        usuarios.agregarUsuario(new Manicurista(nombre, apellido, telefono, usuario, clave, true, especialidad));
+        if (usuarios.agregarUsuario(new Manicurista(nombre, apellido, telefono, usuario, clave, true, especialidad))) {
+            System.out.println("Manicurista registrada correctamente.");
+        } else {
+            System.out.println("Ese nombre de usuario ya existe.");
+        }
 
     }
 
@@ -151,7 +155,11 @@ public class MenuPrincipal {
             return;
         }
 
-        usuarios.agregarUsuario(new Administrador(nombre, apellido, telefono, usuario, clave, true));
+        if (usuarios.agregarUsuario(new Administrador(nombre, apellido, telefono, usuario, clave, true))) {
+            System.out.println("Administrador registrado correctamente.");
+        } else {
+            System.out.println("Ese nombre de usuario ya existe.");
+        }
     }
 
     private void editarUsuario(Scanner teclado) {

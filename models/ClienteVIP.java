@@ -27,6 +27,9 @@ public class ClienteVIP extends Cliente implements Descontable {
     }
 
     public void setPorcentajeDescuento(double porcentajeDescuento) {
+        if (porcentajeDescuento < 0 || porcentajeDescuento > 100) {
+            return;
+        }
         this.porcentajeDescuento = porcentajeDescuento;
     }
 

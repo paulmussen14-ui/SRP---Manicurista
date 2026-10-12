@@ -42,8 +42,6 @@ public class MenuLogin {
         }
 
         Manicurista nueva = new Manicurista(nombre, apellido, telefono, usuario, clave, true, especialidad);
-        usuarios.agregarUsuario(nueva);
-
         if (usuarios.agregarUsuario(nueva)) {
             System.out.println("Registro exitoso. Ya puedes iniciar sesion.");
         } else {

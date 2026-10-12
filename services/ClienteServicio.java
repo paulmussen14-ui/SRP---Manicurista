@@ -64,6 +64,7 @@ public class ClienteServicio {
     public void mostrarClientes() {
         if(clientes.isEmpty()) {
             System.out.println("No hay Clientes Registrados.");
+            return;
         }
         int numero = 1;
         for(Cliente c : clientes) {
