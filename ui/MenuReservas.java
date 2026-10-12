@@ -105,13 +105,11 @@ public class MenuReservas {
                 return lista.get(numero - 1);
             }
         } catch (NumberFormatException e) {
-            // no era un numero
         }
         System.out.println("Numero no valido.");
         return null;
     }
 
-    // Busca la clienta por telefono o por nombre; si hay varias, pide elegir una
     private Cliente elegirCliente(Scanner teclado) {
         System.out.print("Telefono o nombre de la clienta: ");
         String texto = teclado.nextLine().trim();
@@ -286,7 +284,6 @@ public class MenuReservas {
         }
     }
 
-    // Muestra la lista y repite hasta escribir 0
     private void agregarEfectos(Scanner teclado, Cita cita) {
         catalogo.mostrarLista(catalogo.getEfectos());
         while (true) {
