@@ -15,7 +15,7 @@ public class DatosDemo {
     }
 
     public static void cargar(UsuarioServicio usuarios, ClienteServicio clientes,
-            ReservaServicio reservas, Catalogo catalogo) {
+        ReservaServicio reservas, Catalogo catalogo) {
         Manicurista lucia = new Manicurista("Lucia", "Paredes", "987654321", "lucia", "1234", true, "Acrilicas");
         Manicurista valeria = new Manicurista("Valeria", "Rojas", "976543210", "valeria", "1234", true,
                 "Pedicure y Spa");

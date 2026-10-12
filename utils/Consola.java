@@ -30,7 +30,6 @@ public class Consola {
                 return METODOS_PAGO[numero - 1];
             }
         } catch (NumberFormatException e) {
-            // no era un numero
         }
         return null;
     }

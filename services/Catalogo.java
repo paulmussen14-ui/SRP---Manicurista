@@ -53,7 +53,6 @@ public class Catalogo {
         return otros;
     }
 
-    // ---------- elegir por numero ----------
     private Sistemas elegir(ArrayList<Sistemas> lista, String texto) {
         try {
             int numero = Integer.parseInt(texto.trim());
@@ -61,7 +60,6 @@ public class Catalogo {
                 return lista.get(numero - 1);
             }
         } catch (NumberFormatException e) {
-            // no era un numero
         }
         return null;
     }
@@ -88,7 +86,6 @@ public class Catalogo {
         }
     }
 
-    // ---------- agregar, editar y eliminar ----------
     public static final String SERVICIO = "servicio";
     public static final String EFECTO = "efecto";
     public static final String OTRO = "otro";

@@ -121,7 +121,6 @@ public class MenuReportes {
         double[] sumas = new double[metodos.length];
         int[] cantidades = new int[metodos.length];
 
-        // Cada venta se compone del adelanto (al reservar) y del saldo (al cobrar)
         for (Venta v : ventas.getVentas()) {
             for (int i = 0; i < metodos.length; i++) {
                 if (metodos[i].equals(v.getReserva().getMetodoAdelanto())) {

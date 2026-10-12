@@ -20,7 +20,6 @@ public class ReservaServicio {
     private ArrayList<Reserva> reservas = new ArrayList<>();
     private int siguienteCodigo = 1;
 
-    // Crea la reserva y cobra la mitad como adelanto. Devuelve null si no se puede.
     public Reserva crearReserva(Cita cita) {
         if (cita == null || cita.getManicurista() == null) {
             return null;
@@ -40,7 +39,6 @@ public class ReservaServicio {
         return nueva;
     }
 
-    // La manicurista no debe tener otra reserva activa a la misma fecha y hora
     public boolean manicuristaLibre(Manicurista manicurista, String fecha, String hora) {
         String usuario = manicurista.getNombreUsuario();
         for (Reserva r : reservas) {
@@ -55,7 +53,6 @@ public class ReservaServicio {
         return true;
     }
 
-    // Formato dd/MM/aaaa y que no sea un dia pasado
     public boolean fechaValida(String fecha) {
         try {
             return !LocalDate.parse(fecha, FMT_FECHA).isBefore(LocalDate.now());
@@ -64,7 +61,6 @@ public class ReservaServicio {
         }
     }
 
-    // Solo el formato HH:mm
     public boolean horaValida(String hora) {
         try {
             LocalTime.parse(hora, FMT_HORA);
@@ -74,7 +70,6 @@ public class ReservaServicio {
         }
     }
 
-    // Fecha y hora juntas, y que no sean pasadas
     public boolean fechaHoraValida(String fecha, String hora) {
         try {
             LocalDate d = LocalDate.parse(fecha, FMT_FECHA);

@@ -8,14 +8,11 @@ import models.Cliente;
 public class ClienteServicio {
     private ArrayList<Cliente> clientes = new ArrayList<>();
 
-    // Minusculas y sin tildes, para que "maria" encuentre "María"
     private String normalizar(String texto) {
         String sinTildes = Normalizer.normalize(texto, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
         return sinTildes.toLowerCase().trim();
     }
 
-    // Busca por telefono o por nombre/apellido. Si el telefono coincide exacto,
-    // devuelve solo esa clienta.
     public ArrayList<Cliente> buscarClientes(String texto) {
         ArrayList<Cliente> encontrados = new ArrayList<>();
         if (texto == null || texto.trim().isEmpty()) {

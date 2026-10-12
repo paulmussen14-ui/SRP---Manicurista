@@ -88,8 +88,6 @@ public class MenuVentas {
         cobrar(teclado, r);
     }
 
-    // Cobra el saldo de una reserva atendida y emite la boleta.
-    // Tambien se usa al terminar de atender una reserva.
     public void cobrar(Scanner teclado, Reserva r) {
         if (ventas.reservaYaVendida(r)) {
             System.out.println("Esa reserva ya fue cobrada.");
