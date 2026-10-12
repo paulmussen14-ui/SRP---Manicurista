@@ -254,7 +254,6 @@ public class MenuReservas {
         System.out.println(LINEA);
     }
 
-    // Durante la atencion se agregan los efectos y se completa el total
     private void atenderReserva(Scanner teclado) {
         System.out.println(LINEA);
         System.out.println("-------ATENDER RESERVA-------\n");
