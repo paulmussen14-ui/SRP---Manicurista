@@ -1,11 +1,42 @@
 package services;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 import models.Cliente;
 
 public class ClienteServicio {
     private ArrayList<Cliente> clientes = new ArrayList<>();
+
+    // Minusculas y sin tildes, para que "maria" encuentre "María"
+    private String normalizar(String texto) {
+        String sinTildes = Normalizer.normalize(texto, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        return sinTildes.toLowerCase().trim();
+    }
+
+    // Busca por telefono o por nombre/apellido. Si el telefono coincide exacto,
+    // devuelve solo esa clienta.
+    public ArrayList<Cliente> buscarClientes(String texto) {
+        ArrayList<Cliente> encontrados = new ArrayList<>();
+        if (texto == null || texto.trim().isEmpty()) {
+            return encontrados;
+        }
+
+        Cliente exacto = buscarCliente(texto.trim());
+        if (exacto != null) {
+            encontrados.add(exacto);
+            return encontrados;
+        }
+
+        String buscado = normalizar(texto);
+        for (Cliente c : clientes) {
+            if (c.getTelefono().contains(buscado)
+                    || normalizar(c.getNombreCompleto()).contains(buscado)) {
+                encontrados.add(c);
+            }
+        }
+        return encontrados;
+    }
 
     public Cliente buscarCliente(String telefono) {
         for (Cliente c : clientes) {

@@ -23,6 +23,7 @@ public class MenuCatalogo {
             System.out.println("+========================================+");
             System.out.println("|   [1]  Administrar servicios           |");
             System.out.println("|   [2]  Administrar efectos             |");
+            System.out.println("|   [3]  Administrar otros               |");
             System.out.println("|   [0]  Volver                          |");
             System.out.println("+========================================+");
             System.out.print("Elige una opcion: ");
@@ -30,10 +31,13 @@ public class MenuCatalogo {
 
             switch (opcion) {
                 case "1":
-                    administrar(teclado, false);
+                    administrar(teclado, Catalogo.SERVICIO);
                     break;
                 case "2":
-                    administrar(teclado, true);
+                    administrar(teclado, Catalogo.EFECTO);
+                    break;
+                case "3":
+                    administrar(teclado, Catalogo.OTRO);
                     break;
                 case "0":
                     break;
@@ -43,13 +47,15 @@ public class MenuCatalogo {
         }
     }
 
-    private void administrar(Scanner teclado, boolean efectos) {
+    private void administrar(Scanner teclado, String tipo) {
         String opcion = "";
         while (!opcion.equals("0")) {
             System.out.println();
             System.out.println("+========================================+");
-            if (efectos) {
+            if (tipo.equals(Catalogo.EFECTO)) {
                 System.out.println("|          EFECTOS DEL CATALOGO          |");
+            } else if (tipo.equals(Catalogo.OTRO)) {
+                System.out.println("|           OTROS DEL CATALOGO           |");
             } else {
                 System.out.println("|         SERVICIOS DEL CATALOGO         |");
             }
@@ -66,17 +72,17 @@ public class MenuCatalogo {
             switch (opcion) {
                 case "1":
                     System.out.println(LINEA);
-                    verLista(efectos);
+                    verLista(tipo);
                     System.out.println(LINEA);
                     break;
                 case "2":
-                    agregar(teclado, efectos);
+                    agregar(teclado, tipo);
                     break;
                 case "3":
-                    editar(teclado, efectos);
+                    editar(teclado, tipo);
                     break;
                 case "4":
-                    eliminar(teclado, efectos);
+                    eliminar(teclado, tipo);
                     break;
                 case "0":
                     break;
@@ -86,22 +92,27 @@ public class MenuCatalogo {
         }
     }
 
-    private void verLista(boolean efectos) {
-        if (efectos) {
+    private void verLista(String tipo) {
+        if (tipo.equals(Catalogo.EFECTO)) {
             catalogo.mostrarLista(catalogo.getEfectos());
+        } else if (tipo.equals(Catalogo.OTRO)) {
+            catalogo.mostrarLista(catalogo.getOtros());
         } else {
             catalogo.mostrarLista(catalogo.getServicios());
         }
     }
 
-    private Sistemas elegir(boolean efectos, String texto) {
-        if (efectos) {
+    private Sistemas elegir(String tipo, String texto) {
+        if (tipo.equals(Catalogo.EFECTO)) {
             return catalogo.elegirEfecto(texto);
+        }
+        if (tipo.equals(Catalogo.OTRO)) {
+            return catalogo.elegirOtro(texto);
         }
         return catalogo.elegirServicio(texto);
     }
 
-    private void agregar(Scanner teclado, boolean efectos) {
+    private void agregar(Scanner teclado, String tipo) {
         System.out.println(LINEA);
         System.out.println("-------AGREGAR-------\n");
         System.out.print("Nombre: ");
@@ -116,8 +127,10 @@ public class MenuCatalogo {
         }
 
         boolean ok;
-        if (efectos) {
+        if (tipo.equals(Catalogo.EFECTO)) {
             ok = catalogo.agregarEfecto(nombre, precio);
+        } else if (tipo.equals(Catalogo.OTRO)) {
+            ok = catalogo.agregarOtro(nombre, precio);
         } else {
             ok = catalogo.agregarServicio(nombre, precio);
         }
@@ -130,13 +143,13 @@ public class MenuCatalogo {
         System.out.println(LINEA);
     }
 
-    private void editar(Scanner teclado, boolean efectos) {
+    private void editar(Scanner teclado, String tipo) {
         System.out.println(LINEA);
         System.out.println("-------EDITAR-------\n");
-        verLista(efectos);
+        verLista(tipo);
         System.out.print("Numero a editar: ");
         String texto = teclado.nextLine().trim();
-        Sistemas actual = elegir(efectos, texto);
+        Sistemas actual = elegir(tipo, texto);
         if (actual == null) {
             System.out.println("Numero no valido.");
             return;
@@ -163,8 +176,10 @@ public class MenuCatalogo {
 
         int numero = Integer.parseInt(texto);
         boolean ok;
-        if (efectos) {
+        if (tipo.equals(Catalogo.EFECTO)) {
             ok = catalogo.editarEfecto(numero, nombre, precio);
+        } else if (tipo.equals(Catalogo.OTRO)) {
+            ok = catalogo.editarOtro(numero, nombre, precio);
         } else {
             ok = catalogo.editarServicio(numero, nombre, precio);
         }
@@ -177,13 +192,13 @@ public class MenuCatalogo {
         System.out.println(LINEA);
     }
 
-    private void eliminar(Scanner teclado, boolean efectos) {
+    private void eliminar(Scanner teclado, String tipo) {
         System.out.println(LINEA);
         System.out.println("-------ELIMINAR-------\n");
-        verLista(efectos);
+        verLista(tipo);
         System.out.print("Numero a eliminar: ");
         String texto = teclado.nextLine().trim();
-        Sistemas actual = elegir(efectos, texto);
+        Sistemas actual = elegir(tipo, texto);
         if (actual == null) {
             System.out.println("Numero no valido.");
             return;
@@ -196,8 +211,10 @@ public class MenuCatalogo {
         }
 
         int numero = Integer.parseInt(texto);
-        if (efectos) {
+        if (tipo.equals(Catalogo.EFECTO)) {
             catalogo.eliminarEfecto(numero);
+        } else if (tipo.equals(Catalogo.OTRO)) {
+            catalogo.eliminarOtro(numero);
         } else {
             catalogo.eliminarServicio(numero);
         }

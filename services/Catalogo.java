@@ -87,9 +87,16 @@ public class Catalogo {
     }
 
     // ---------- agregar, editar y eliminar ----------
-    private Sistemas crear(boolean esEfecto, String nombre, double precio) {
-        if (esEfecto) {
+    public static final String SERVICIO = "servicio";
+    public static final String EFECTO = "efecto";
+    public static final String OTRO = "otro";
+
+    private Sistemas crear(String tipo, String nombre, double precio) {
+        if (tipo.equals(EFECTO)) {
             return new Efecto(nombre, precio);
+        }
+        if (tipo.equals(OTRO)) {
+            return new Otro(nombre, precio);
         }
         return new Sistemas(nombre, precio);
     }
@@ -103,20 +110,20 @@ public class Catalogo {
         return false;
     }
 
-    private boolean agregar(ArrayList<Sistemas> lista, boolean esEfecto, String nombre, double precio) {
+    private boolean agregar(ArrayList<Sistemas> lista, String tipo, String nombre, double precio) {
         if (nombre.isEmpty() || precio <= 0 || nombreRepetido(lista, nombre, -1)) {
             return false;
         }
-        lista.add(crear(esEfecto, nombre, precio));
+        lista.add(crear(tipo, nombre, precio));
         return true;
     }
 
-    private boolean editar(ArrayList<Sistemas> lista, boolean esEfecto, int numero, String nombre, double precio) {
+    private boolean editar(ArrayList<Sistemas> lista, String tipo, int numero, String nombre, double precio) {
         if (numero < 1 || numero > lista.size() || nombre.isEmpty() || precio <= 0
                 || nombreRepetido(lista, nombre, numero - 1)) {
             return false;
         }
-        lista.set(numero - 1, crear(esEfecto, nombre, precio));
+        lista.set(numero - 1, crear(tipo, nombre, precio));
         return true;
     }
 
@@ -129,11 +136,11 @@ public class Catalogo {
     }
 
     public boolean agregarServicio(String nombre, double precio) {
-        return agregar(servicios, false, nombre, precio);
+        return agregar(servicios, SERVICIO, nombre, precio);
     }
 
     public boolean editarServicio(int numero, String nombre, double precio) {
-        return editar(servicios, false, numero, nombre, precio);
+        return editar(servicios, SERVICIO, numero, nombre, precio);
     }
 
     public boolean eliminarServicio(int numero) {
@@ -141,14 +148,26 @@ public class Catalogo {
     }
 
     public boolean agregarEfecto(String nombre, double precio) {
-        return agregar(efectos, true, nombre, precio);
+        return agregar(efectos, EFECTO, nombre, precio);
     }
 
     public boolean editarEfecto(int numero, String nombre, double precio) {
-        return editar(efectos, true, numero, nombre, precio);
+        return editar(efectos, EFECTO, numero, nombre, precio);
     }
 
     public boolean eliminarEfecto(int numero) {
         return eliminar(efectos, numero);
+    }
+
+    public boolean agregarOtro(String nombre, double precio) {
+        return agregar(otros, OTRO, nombre, precio);
+    }
+
+    public boolean editarOtro(int numero, String nombre, double precio) {
+        return editar(otros, OTRO, numero, nombre, precio);
+    }
+
+    public boolean eliminarOtro(int numero) {
+        return eliminar(otros, numero);
     }
 }

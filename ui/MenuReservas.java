@@ -107,13 +107,43 @@ public class MenuReservas {
         return null;
     }
 
+    // Busca la clienta por telefono o por nombre; si hay varias, pide elegir una
+    private Cliente elegirCliente(Scanner teclado) {
+        System.out.print("Telefono o nombre de la clienta: ");
+        ArrayList<Cliente> encontrados = clientes.buscarClientes(teclado.nextLine());
+        if (encontrados.isEmpty()) {
+            System.out.println("No se encontro ninguna clienta. Registrala primero.");
+            return null;
+        }
+        if (encontrados.size() == 1) {
+            Cliente unica = encontrados.get(0);
+            System.out.println("Clienta: " + unica.getNombreCompleto() + " - " + unica.getTelefono());
+            return unica;
+        }
+
+        System.out.println("Se encontraron varias clientas:");
+        for (int i = 0; i < encontrados.size(); i++) {
+            Cliente c = encontrados.get(i);
+            System.out.println("  [" + (i + 1) + "] " + c.getNombreCompleto() + " - " + c.getTelefono());
+        }
+        System.out.print("Numero de la clienta: ");
+        try {
+            int numero = Integer.parseInt(teclado.nextLine().trim());
+            if (numero >= 1 && numero <= encontrados.size()) {
+                return encontrados.get(numero - 1);
+            }
+        } catch (NumberFormatException e) {
+            // no era un numero
+        }
+        System.out.println("Numero no valido.");
+        return null;
+    }
+
     private void nuevaReserva(Scanner teclado) {
         System.out.println(LINEA);
         System.out.println("-------NUEVA RESERVA-------\n");
-        System.out.print("Telefono de la clienta: ");
-        Cliente cliente = clientes.buscarCliente(teclado.nextLine().trim());
+        Cliente cliente = elegirCliente(teclado);
         if (cliente == null) {
-            System.out.println("El cliente no existe. Registralo primero.");
             return;
         }
 
@@ -196,6 +226,7 @@ public class MenuReservas {
                 + " | Manicurista: " + r.getCita().getManicurista().getNombreCompleto());
 
         agregarEfectos(teclado, r.getCita());
+        agregarOtros(teclado, r.getCita());
         r.marcarAtendida();
 
         System.out.println("\n--- RESUMEN FINAL ---");
@@ -219,6 +250,26 @@ public class MenuReservas {
             } else {
                 cita.agregarExtra(efecto);
                 System.out.println("Agregado: " + efecto.getNombre());
+            }
+        }
+    }
+
+    // Igual que los efectos: se muestran los otros cargos y se repite hasta escribir 0
+    private void agregarOtros(Scanner teclado, Cita cita) {
+        System.out.println("\n--- OTROS ---");
+        catalogo.mostrarLista(catalogo.getOtros());
+        while (true) {
+            System.out.print("Numero de otro (0 para terminar): ");
+            String texto = teclado.nextLine().trim();
+            if (texto.equals("0")) {
+                break;
+            }
+            Sistemas otro = catalogo.elegirOtro(texto);
+            if (otro == null) {
+                System.out.println("Numero no valido.");
+            } else {
+                cita.agregarExtra(otro);
+                System.out.println("Agregado: " + otro.getNombre());
             }
         }
     }
